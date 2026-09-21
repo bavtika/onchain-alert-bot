@@ -8,14 +8,15 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
 
 COPY requirements.txt .
 RUN python -m venv /opt/venv \
-    && /opt/venv/bin/pip install --no-cache-dir --upgrade pip \
-    && /opt/venv/bin/pip install --no-cache-dir -r requirements.txt
+    && /opt/venv/bin/pip install --no-cache-dir --upgrade pip "setuptools>=78.1.1" wheel \
+    && /opt/venv/bin/pip install --no-cache-dir -r requirements.txt \
+    && /opt/venv/bin/pip install --no-cache-dir --upgrade "msgpack>=1.1.0"
 
 FROM python:3.12-slim AS runtime
 
 LABEL org.opencontainers.image.title="onchain-alert-bot" \
       org.opencontainers.image.description="Multi-strategy crypto market alert bot" \
-      org.opencontainers.image.source="https://github.com/YOUR_USERNAME/onchain"
+      org.opencontainers.image.source="https://github.com/bavtika/onchain-alert-bot"
 
 ENV PYTHONDONTWRITEBYTECODE=1 \
     PYTHONUNBUFFERED=1 \
