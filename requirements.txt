@@ -1,5 +1,5 @@
 python-telegram-bot>=22.0
-ccxt>=4.0
+ccxt>=4.5.78
 web3>=7.0
 aiohttp>=3.9
 aiosqlite>=0.19
