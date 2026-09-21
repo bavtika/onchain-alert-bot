@@ -1,0 +1,61 @@
+services:
+  bot:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: onchain-alert-bot:local
+    container_name: onchain-bot
+    restart: unless-stopped
+    env_file:
+      - .env
+    environment:
+      HEALTH_PORT: "8080"
+      LOG_LEVEL: ${LOG_LEVEL:-INFO}
+    ports:
+      - "${HEALTH_PORT:-8080}:8080"
+    volumes:
+      - bot-data:/app/data
+    networks:
+      - onchain
+    healthcheck:
+      test:
+        [
+          "CMD",
+          "python",
+          "-c",
+          "import urllib.request; urllib.request.urlopen('http://127.0.0.1:8080/healthz', timeout=3)",
+        ]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+      start_period: 40s
+    logging:
+      driver: json-file
+      options:
+        max-size: "10m"
+        max-file: "3"
+
+  # Optional: scrape /metrics from the bot
+  prometheus:
+    image: prom/prometheus:v2.54.1
+    container_name: onchain-prometheus
+    profiles: ["observability"]
+    restart: unless-stopped
+    volumes:
+      - ./deploy/prometheus/prometheus.yml:/etc/prometheus/prometheus.yml:ro
+      - prometheus-data:/prometheus
+    ports:
+      - "9090:9090"
+    networks:
+      - onchain
+    depends_on:
+      bot:
+        condition: service_healthy
+
+networks:
+  onchain:
+    driver: bridge
+
+volumes:
+  bot-data:
+  prometheus-data:
