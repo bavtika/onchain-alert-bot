@@ -2,22 +2,6 @@
 
 Async **Python** crypto market alert service with **11 strategies**, Telegram delivery, SQLite persistence, and a production-oriented **DevOps** packaging layer (Docker, Compose, Kubernetes, CI, metrics).
 
-Built as a portfolio project demonstrating how to take a real workload from local scripts to a containerized, observable, CI-gated service — without paid API keys.
-
----
-
-## Why this repo (DevOps CV)
-
-| Capability | Implementation |
-|---|---|
-| Containerization | Multi-stage `Dockerfile`, non-root user (`uid 10001`), image `HEALTHCHECK` |
-| Orchestration | `docker compose` + Kubernetes Deployment/Service with probes & resource limits |
-| Secrets | Env-based config; K8s `Secret` example (never commit real values) |
-| Observability | `/healthz`, `/readyz`, Prometheus `/metrics`, optional Prometheus Compose profile |
-| CI/CD | GitHub Actions: Ruff + Pytest + Docker Buildx + Trivy (HIGH/CRITICAL) |
-| Supply chain | Dependabot for pip, Docker, and GitHub Actions |
-| Reliability | Alert cooldowns, RPC fallbacks, rate limits, DB prune loop, graceful SIGTERM |
-
 ---
 
 ## Architecture
